@@ -25,16 +25,16 @@ class TikTokDownloader:
         
         # Configure yt-dlp options for TikTok
         self.ydl_opts = {
-            'format': 'best[ext=mp4]',  # Download best quality mp4
+            'format': 'bv*+ba/best',
+            'merge_output_format': 'mp4',
             'outtmpl': str(self.output_dir / '%(title)s.%(ext)s'),
-            'writeinfojson': True,  # Save metadata
+            'writeinfojson': True,
             'writesubtitles': False,
             'writeautomaticsub': False,
-            'ignoreerrors': True,  # Continue on errors
+            'ignoreerrors': True,
             'no_warnings': False,
-            'extractaudio': False,
-            'audioformat': 'mp3',
-            'audioquality': '192K',
+            'noplaylist': True,
+            'http_headers': {'Referer': 'https://www.tiktok.com/'},
         }
     
     def download_video(self, url: str, max_retries: int = 3) -> Optional[Dict]:
@@ -114,6 +114,8 @@ class TikTokDownloader:
                     error_type = "Video is unavailable or has been deleted"
                 elif 'private video' in error_msg:
                     error_type = "Video is private and cannot be accessed"
+                elif 'requested format is not available' in error_msg:
+                    error_type = "Requested format not available - switched to default"
                 elif 'network' in error_msg or 'connection' in error_msg:
                     error_type = "Network connection error"
                 elif 'rate limit' in error_msg or 'too many requests' in error_msg:

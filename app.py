@@ -101,6 +101,7 @@ def main():
         st.subheader("Language")
         language_options = {
             "Auto-detect": None,
+            "Indonesian": "id",
             "English": "en",
             "Spanish": "es",
             "French": "fr",
@@ -369,8 +370,8 @@ def display_results():
                     st.write(f"Created: {result.get('upload_date')}")
                 
                 st.write(f"Duration: {result.get('duration', 0):.1f}s")
-                st.write(f"Views: {result.get('view_count', 'N/A'):,}")
-                st.write(f"Likes: {result.get('like_count', 'N/A'):,}")
+                st.write(f"Views: {result.get('view_count', 0):,}")
+                st.write(f"Likes: {result.get('like_count', 0):,}")
                 
                 # Display additional metadata if available
                 if result.get('comment_count') is not None:
@@ -389,11 +390,11 @@ def display_results():
                     
                     # Show segments if available
                     if result.get('segments'):
-                        with st.expander("View Segments with Timestamps"):
-                            for segment in result['segments']:
-                                start_time = format_timestamp(segment['start'])
-                                end_time = format_timestamp(segment['end'])
-                                st.write(f"**{start_time} - {end_time}:** {segment['text']}")
+                        st.write("**Segments with Timestamps:**")
+                        for segment in result['segments']:
+                            start_time = format_timestamp(segment['start'])
+                            end_time = format_timestamp(segment['end'])
+                            st.write(f"**{start_time} - {end_time}:** {segment['text']}")
                 else:
                     # Enhanced error display
                     error_msg = result.get('transcription_error', 'Unknown error')
